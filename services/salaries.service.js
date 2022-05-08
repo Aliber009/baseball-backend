@@ -1,0 +1,14 @@
+const Salaries = require('../models/salaries.model')
+
+const getSalaries = async(options)=>{
+  try{
+    
+    const salaries = await Salaries.findAll({ limit:options.limit,offset:options.offset })
+    return salaries 
+  }
+  catch(e){
+      console.log('err',e)
+      console.log('error retreiving Salaries ! ')
+  }
+}
+module.exports = { getSalaries }
