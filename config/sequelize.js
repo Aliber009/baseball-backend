@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 
-const sequelize = new Sequelize('postgres://postgres:jesuisber@localhost:5432/baseball',{logging:false});
+const sequelize = new Sequelize('postgres://postgres:jesuisber@localhost:5432/baseball',{logging:true});
 sequelize
   .authenticate()
   .then(() => {

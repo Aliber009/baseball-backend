@@ -5,11 +5,23 @@ const getPeople = async(req,res)=>{
     const {limit,offset} = req.query
     const options = {limit:limit,offset:offset}
     const people = await peopleService.getPeople(options)
-    res.json({success:true ,people:people})
+    res.json({success:true ,players:people})
   }
   catch(e){
     console.log("error",e)
     res.json({success:false ,error:"error"})
   }
 }
-module.exports = { getPeople }
+const getSortedPeople = async(req,res)=>{
+  try{
+    const {limit,offset,fn,ln,qty} = req.query
+    const options = {limit:limit,offset:offset}
+    const people = await peopleService.getPeopleAlphaSorted(options,{nameFirst:fn,nameLast:ln,numberUpDown:qty})
+    res.json({success:true ,player:people})
+  }
+  catch(e){
+    console.log("error",e)
+    res.json({success:false ,error:"error"})
+  }
+}
+module.exports = { getPeople,getSortedPeople }

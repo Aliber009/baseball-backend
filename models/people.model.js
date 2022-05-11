@@ -4,6 +4,7 @@ const sequelize=require('../config/sequelize')
   //const People = sequelize.models.People
  const People = sequelize.define('People',
     {
+      row_number : {type : DataTypes.TEXT , primaryKey :true  },
       playerID : {type : DataTypes.TEXT , primaryKey :true  },
       birthYear : {type : DataTypes.INTEGER},
       birthMonth : {type : DataTypes.INTEGER},
@@ -31,7 +32,7 @@ const sequelize=require('../config/sequelize')
     },
     {
     timestamps:false,
-    tableName: 'People'
+    tableName: 'PeopleSorted'
     });
  
 People.sync()
