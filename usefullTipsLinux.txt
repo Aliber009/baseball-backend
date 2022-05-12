@@ -1,0 +1,5 @@
+dbs can have conflicts when running on different collations ( locales ) :
+1 enables this on your server machine by 
+uncomment all necessary locales from :  /etc/locale.gen
+in root generate them with locale-gen
+now you have them in your machine!
