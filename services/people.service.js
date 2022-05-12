@@ -41,7 +41,10 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
     } 
     else{
       // we add the player to the BD sort it and delete it after :
-      const playerID = uuidv4(); 
+      const getRandomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min)) + min;
+      }
+      const playerID = nameFirst.replace(/\s/g, '')+nameLast+getRandomInt(0,5)+getRandomInt(0,9); 
       const newPlayer = await People.create({playerID:playerID, nameFirst : nameFirst , nameLast : nameLast})
       //now we will sort all the table : 
       const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameFirst" ASC, "nameLast" ASC) as roworder FROM "PeopleSorted") as sortedPlayers'
@@ -50,7 +53,7 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       const UpRowNumber = parseInt(newPlayerOrder[0].roworder) + QueryNumberUpDown
       const DownRowNumber = parseInt(newPlayerOrder[0].roworder) - QueryNumberUpDown<0? 0: parseInt(newPlayerOrder[0].roworder) - QueryNumberUpDown
       //query to get rows up & down
-      const [listPlayers, metadataPl ] = await sequelize.query('select * from '+sortedTable+' where ("roworder" <= '+UpRowNumber+' AND "roworder" > '+DownRowNumber+')')
+      const [listPlayers, metadataPl ] = await sequelize.query('select "playerID","nameFirst","nameLast" from '+sortedTable+' where ("roworder" <= '+UpRowNumber+' AND "roworder" > '+DownRowNumber+')')
 
       //now we delete the added player
       await People.destroy({where:{playerID:playerID}})
