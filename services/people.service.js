@@ -1,6 +1,7 @@
+const { Op } = require('sequelize')
 const sequelize = require('../config/sequelize')
 const People = require('../models/people.model')
-
+const { v4: uuidv4 } = require('uuid');
 const getPeople = async(options)=>{
   try{
     
@@ -16,23 +17,46 @@ const getPeople = async(options)=>{
 const getPeopleAlphaSorted = async(options,playerDetails)=>{
   try{
     const {nameFirst,nameLast,numberUpDown} = playerDetails
-    const QueryNumberUpDown = numberUpDown? numberUpDown : 3
+    const QueryNumberUpDown = parseInt(numberUpDown)? parseInt(numberUpDown) : 3
     if(!nameFirst || !nameLast){
       return "Please provide fn (firsName) , ln (lastName) in url"
     //const people = await People.findAll({where: {nameFirst : nameFirst , nameLast : nameLast  }, limit:options.limit,offset:options.offset ,order : [['nameFirst','ASC'],['nameLast','ASC']] })
     }
     else{
-    const people = await People.findAll({where: {nameFirst : nameFirst , nameLast : nameLast  } ,order : [['nameFirst','ASC'],['nameLast','ASC']] })
+    const people = await People.findOne({where: {nameFirst : nameFirst , nameLast : nameLast  } })
     // now we get the player  and his  order in list 
-    //const people = await sequelize.query("select row_number() over(), * from 'People' where nameFirst ='"+nameFirst+"' and nameLast ='"+nameLast+"'")
+    //in SEQULIZE always use [Op.] and never $Op ($ op are deprecated ! )
     if(people){
-      return people
+      const orderOfPlayer = parseInt(people.row_number)
+      const UpRowNumber = orderOfPlayer + QueryNumberUpDown
+      const DownRowNumber = orderOfPlayer - QueryNumberUpDown<0? 0: orderOfPlayer - QueryNumberUpDown
+
+      /* const listPlayers = await People.findAll({
+        where:{
+          [Op.and]:[
+            {row_number : {[Op.lte]:UpRowNumber.toString()}},
+            {row_number : {[Op.gt]:DownRowNumber.toString()}}
+          ]}}) 
+      return listPlayers */
     } 
     else{
-      //here the main code for not finding a player !
-      // first we will alter the table and install an incremental id column 
+      // we add the player to the BD sort it and delete it after :
+      const playerID = uuidv4(); 
+      const newPlayer = await People.create({playerID:playerID, nameFirst : nameFirst , nameLast : nameLast})
+      //now we will sort all the table : 
+      const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameFirst" ASC, "nameLast" ASC) as roworder FROM "PeopleSorted") as sortedPlayers'
+      const [newPlayerOrder,metadata] = await sequelize.query('select roworder from '+sortedTable+' where "playerID" = \''+playerID+'\' ')
+      //now we have the order the fake player
+      const UpRowNumber = parseInt(newPlayerOrder[0].roworder) + QueryNumberUpDown
+      const DownRowNumber = parseInt(newPlayerOrder[0].roworder) - QueryNumberUpDown<0? 0: parseInt(newPlayerOrder[0].roworder) - QueryNumberUpDown
+      //query to get rows up & down
+      const [listPlayers, metadataPl ] = await sequelize.query('select * from '+sortedTable+' where ("roworder" <= '+UpRowNumber+' AND "roworder" > '+DownRowNumber+')')
 
-      
+      //now we delete the added player
+      await People.destroy({where:{playerID:playerID}})
+      //return the output 
+      return listPlayers 
+
     }
     }
   }
