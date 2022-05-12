@@ -50,6 +50,7 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameFirst" ASC, "nameLast" ASC) as roworder FROM "PeopleSorted") as sortedPlayers'
       const [newPlayerOrder,metadata] = await sequelize.query('select roworder from '+sortedTable+' where "playerID" = \''+playerID+'\' ')
       //now we have the order the fake player
+      console.log(')============>',newPlayerOrder[0].roworder)
       const UpRowNumber = parseInt(newPlayerOrder[0].roworder) + QueryNumberUpDown
       const DownRowNumber = parseInt(newPlayerOrder[0].roworder) - QueryNumberUpDown<0? 0: parseInt(newPlayerOrder[0].roworder) - QueryNumberUpDown
       //query to get rows up & down
