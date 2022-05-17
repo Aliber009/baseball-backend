@@ -57,7 +57,7 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       const playerID =  playerIDraw.replace("'","");
       const newPlayer = await People.create({playerID:playerID, nameFirst : nameFirst , nameLast : nameLast})
       //now we will sort all the table : 
-      const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameLast" COLLATE "en_US" ASC, "nameFirst" COLLATE "en_US" ASC ) as roworder FROM "PeopleSorted") as sortedPlayers'
+      const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameLast" COLLATE "en-US-x-icu" ASC, "nameFirst" COLLATE "en-US-x-icu" ASC ) as roworder FROM "PeopleSorted") as sortedPlayers'
       const [newPlayerOrder,metadata] = await sequelize.query('select roworder from '+sortedTable+' where "playerID" = \''+playerID+'\' ')
       //now we have the order the fake player
       const UpRowNumber = parseInt(newPlayerOrder[0].roworder) + QueryNumberUpDown
