@@ -39,8 +39,8 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       return "Please provide fn (firsName) , ln (lastName) in url"
     }
     else{
-    const fnProcessed = nameFirst.replace("'","''")
-    const lnProcessed = nameLast.replace("'","''")
+    const fnProcessed = nameFirst
+    const lnProcessed = nameLast
     const people = await People.findOne({where: {nameFirst : fnProcessed , nameLast : lnProcessed  },attributes:['playerID','nameFirst','nameLast'] })
     // now we get the player  and his  order in list 
     //in SEQULIZE always use [Op.] and never $Op ($ op are deprecated ! )
