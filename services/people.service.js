@@ -53,7 +53,8 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       const getRandomInt = (min, max) => {
         return Math.floor(Math.random() * (max - min)) + min;
       }
-      const playerID = nameFirst.replace(/\s/g, '')+nameLast+getRandomInt(0,5)+getRandomInt(0,9); 
+      const playerIDraw = nameFirst.replace(/\s/g, '')+nameLast+getRandomInt(0,5)+getRandomInt(0,9);
+      const playerID =  playerIDraw.replace("''","");
       const newPlayer = await People.create({playerID:playerID, nameFirst : nameFirst , nameLast : nameLast})
       //now we will sort all the table : 
       const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameLast" COLLATE "en_US" ASC, "nameFirst" COLLATE "en_US" ASC ) as roworder FROM "PeopleSorted") as sortedPlayers'
