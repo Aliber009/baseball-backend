@@ -3,3 +3,5 @@ dbs can have conflicts when running on different collations ( locales ) :
 uncomment all necessary locales from :  /etc/locale.gen
 in root generate them with locale-gen
 now you have them in your machine!
+// alternative use dpkg locales and select with space bar
+2: in psql : use create collation "fr_FR" (LOCALE="fr_FR.utf8"); anotation not `` or '' 

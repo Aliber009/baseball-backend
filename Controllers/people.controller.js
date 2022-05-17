@@ -2,9 +2,8 @@ const { peopleService } = require('../services')
 
 const getPeople = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
-    const people = await peopleService.getPeople(options)
+    const {limit,startswith} = req.query
+    const people = await peopleService.getPeople(limit,startswith)
     res.json({success:true ,players:people})
   }
   catch(e){
