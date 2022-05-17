@@ -39,7 +39,9 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       return "Please provide fn (firsName) , ln (lastName) in url"
     }
     else{
-    const people = await People.findOne({where: {nameFirst : nameFirst , nameLast : nameLast  },attributes:['playerID','nameFirst','nameLast'] })
+    const fnProcessed = nameFirst.replace("'","''")
+    const lnProcessed = nameLast.replace("'","''")
+    const people = await People.findOne({where: {nameFirst : fnProcessed , nameLast : lnProcessed  },attributes:['playerID','nameFirst','nameLast'] })
     // now we get the player  and his  order in list 
     //in SEQULIZE always use [Op.] and never $Op ($ op are deprecated ! )
     if(people){
@@ -54,7 +56,7 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
         return Math.floor(Math.random() * (max - min)) + min;
       }
       const playerIDraw = nameFirst.replace(/\s/g, '')+nameLast+getRandomInt(0,5)+getRandomInt(0,9);
-      const playerID =  playerIDraw.replace("''","");
+      const playerID =  playerIDraw.replace("'","");
       const newPlayer = await People.create({playerID:playerID, nameFirst : nameFirst , nameLast : nameLast})
       //now we will sort all the table : 
       const sortedTable = '(SELECT *,row_number() over(ORDER BY "nameLast" COLLATE "en_US" ASC, "nameFirst" COLLATE "en_US" ASC ) as roworder FROM "PeopleSorted") as sortedPlayers'
