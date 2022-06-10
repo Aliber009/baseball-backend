@@ -25,8 +25,11 @@ const getPeople = async(limit, startswith)=>{
   {
     const rownumber = people.row_number
     const endLimit = parseInt(rownumber)+parseInt(endOrder)-1
-    const [orderedPlayers,metadata] = await sequelize.query('select "playerID","nameFirst","nameLast" from "PeopleSorted" where "row_number" >= \''+rownumber+'\' AND "row_number" <= \''+endLimit+'\' ');
+    const [orderedPlayers,metadata] = await sequelize.query('select * from "PeopleSorted" where "row_number" >= \''+rownumber+'\' AND "row_number" <= \''+endLimit+'\' ');
     return orderedPlayers
+  }
+  else{
+    return "PlayerID not found!"
   }
  }
 }
@@ -39,7 +42,7 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       return "Please provide fn (firsName) , ln (lastName) in url"
     }
     else{
-    const people = await People.findOne({where: {nameFirst : nameFirst , nameLast : nameLast  },attributes:['playerID','nameFirst','nameLast'] })
+    const people = await People.findOne({where: {nameFirst : nameFirst , nameLast : nameLast  } })
     // now we get the player  and his  order in list 
     //in SEQULIZE always use [Op.] and never $Op ($ op are deprecated ! )
     if(people){
@@ -63,7 +66,7 @@ const getPeopleAlphaSorted = async(options,playerDetails)=>{
       const UpRowNumber = parseInt(newPlayerOrder[0].roworder) + QueryNumberUpDown
       const DownRowNumber = parseInt(newPlayerOrder[0].roworder) - parseInt(QueryNumberUpDown) - 1 <0 ? 0: parseInt(newPlayerOrder[0].roworder) -parseInt(QueryNumberUpDown) - 1
       //query to get rows up & down
-      const [listPlayers, metadataPl ] = await sequelize.query('select "playerID","nameFirst","nameLast" from '+sortedTable+' where ("roworder" <= '+UpRowNumber+' AND "roworder" > '+DownRowNumber+')')
+      const [listPlayers, metadataPl ] = await sequelize.query('select * from '+sortedTable+' where ("roworder" <= '+UpRowNumber+' AND "roworder" > '+DownRowNumber+')')
 
       //now we delete the added player
       await People.destroy({where:{playerID:playerID}})
