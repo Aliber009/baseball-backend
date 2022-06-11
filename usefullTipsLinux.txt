@@ -6,3 +6,4 @@ now you have them in your machine!
 // alternative use dpkg locales and select with space bar
 => restard postgres after new local is installed
 2: in psql : use create collation "fr_FR" (LOCALE="fr_FR.utf8"); anotation not `` or '' 
+root pswd: jesuisber
