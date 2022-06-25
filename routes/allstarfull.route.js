@@ -7,4 +7,5 @@ router
   .route('/')
   .get(allstarfullController.getAllstarfull);
 
+
 module.exports = router  

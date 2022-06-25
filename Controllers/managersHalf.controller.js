@@ -2,10 +2,16 @@ const { managersHalfService } = require('../services')
 
 const getManagersHalf = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
+    const {limit,offset,playerID} = req.query
+    const options = {limit:limit,offset:offset,playerID:playerID}
     const managersHalf = await managersHalfService.getManagersHalf(options)
-    res.json({success:true ,managersHalf:managersHalf})
+    if(managersHalf)
+    {
+     res.json({success:true ,managersHalf:managersHalf})
+    }
+    else{
+      res.json({success:false ,managersHalf:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

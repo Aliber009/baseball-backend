@@ -2,10 +2,16 @@ const { managersService } = require('../services')
 
 const getManagers = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
+    const {limit,offset,playerID} = req.query
+    const options = {limit:limit,offset:offset,playerID}
     const managers = await managersService.getManagers(options)
-    res.json({success:true ,managers:managers})
+    if(managers)
+    {
+     res.json({success:true ,managers:managers})
+    }
+    else{
+      res.json({success:false ,managers:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

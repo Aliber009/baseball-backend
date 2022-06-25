@@ -2,10 +2,15 @@ const { awardsPlayersService } = require('../services')
 
 const getAwardsPlayers = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
+    const {limit,offset, playerID} = req.query
+    const options = {limit:limit,offset:offset,playerID:playerID}
     const awardsPlayers = await awardsPlayersService.getAwardsPlayers(options)
-    res.json({success:true ,awardsPlayers:awardsPlayers})
+    if(awardsPlayers){
+      res.json({success:true ,awardsPlayers:awardsPlayers})
+    }
+    else{
+      res.json({success:true ,awardsPlayers:"not found"})
+    }
   }
   catch(e){
     console.log("error",e)

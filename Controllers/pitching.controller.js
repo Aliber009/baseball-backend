@@ -2,10 +2,16 @@ const { pitchingService } = require('../services')
 
 const getPitching = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
+    const {limit,offset,playerID} = req.query
+    const options = {limit:limit,offset:offset,playerID:playerID}
     const pitching = await pitchingService.getPitching(options)
-    res.json({success:true ,pitching:pitching})
+    if(pitching)
+    {
+     res.json({success:true ,pitching:pitching})
+    }
+    else{
+      res.json({success:false ,pitching:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

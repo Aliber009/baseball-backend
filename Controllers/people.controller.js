@@ -2,9 +2,15 @@ const { peopleService } = require('../services')
 
 const getPeople = async(req,res)=>{
   try{
-    const {limit,startswith} = req.query
-    const people = await peopleService.getPeople(limit,startswith)
-    res.json({success:true ,players:people})
+    const {limit,startswith,playerID} = req.query
+    const people = await peopleService.getPeople(limit,startswith,playerID)
+    if(people)
+    {
+     res.json({success:true ,people:people})
+    }
+    else{
+      res.json({success:false ,people:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

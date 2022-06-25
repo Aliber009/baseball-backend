@@ -2,10 +2,16 @@ const { battingPostService } = require('../services')
 
 const getBattingPost = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
+    const {limit,offset,playerID} = req.query
+    const options = {limit:limit,offset:offset,playerID:playerID}
     const battingPost = await battingPostService.getBattingPost(options)
-    res.json({success:true ,battingPost:battingPost})
+    if(battingPost)
+    {
+     res.json({success:true ,battingPost:battingPost})
+    }
+    else{
+      res.json({success:false ,battingPost:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

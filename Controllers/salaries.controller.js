@@ -2,10 +2,16 @@ const { salariesService } = require('../services')
 
 const getSalaries = async(req,res)=>{
   try{
-    const {limit,offset} = req.query
-    const options = {limit:limit,offset:offset}
+    const {limit,offset,playerID} = req.query
+    const options = {limit:limit,offset:offset,playerID:playerID}
     const salaries = await salariesService.getSalaries(options)
-    res.json({success:true ,salaries:salaries})
+    if(salaries)
+    {
+     res.json({success:true ,salaries:salaries})
+    }
+    else{
+      res.json({success:false ,salaries:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

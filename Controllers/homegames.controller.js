@@ -5,7 +5,13 @@ const getHomeGames = async(req,res)=>{
     const {limit,offset} = req.query
     const options = {limit:limit,offset:offset}
     const homegames = await homegamesService.getHomeGames(options)
-    res.json({success:true ,homegames:homegames})
+    if(homegames)
+    {
+     res.json({success:true ,homegames:homegames})
+    }
+    else{
+      res.json({success:false ,homegames:"Not found"})
+    }
   }
   catch(e){
     console.log("error",e)

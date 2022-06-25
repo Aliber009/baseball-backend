@@ -4,8 +4,13 @@ const People = require('../models/people.model')
 
 
 
-const getPeople = async(limit, startswith)=>{
+const getPeople = async(limit, startswith,playerID)=>{
   // Add the option to get the starts with options
+  if(playerID){
+    const peopleplayerId = await People.findAll({where:{playerID:playerID}})
+    return peopleplayerId
+  }
+  else{
   const endOrder = limit?limit:10
   if(!startswith) {
   try
@@ -30,6 +35,7 @@ const getPeople = async(limit, startswith)=>{
   }
   else{
     return "PlayerID not found!"
+   }
   }
  }
 }
